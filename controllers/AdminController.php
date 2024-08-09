@@ -1,46 +1,31 @@
 <?php
 
+class AdminController extends Controller {
+    private $admin;
 
-require_once './models/AdminModel.php';
-
-class AdminController {
-    private $adminModel;
-
-    public function __construct($db_name) {
-        $this->adminModel = new AdminModel($db_name);
+    public function __construct() {
+        $database = new Database();
+        $db = $database->getConnection();
+        $this->admin = new Admin($db);
     }
 
-    public function authenticate() {
-        $headers = apache_request_headers();
-        $authorizationHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
-
-        if ($authorizationHeader) {
-            list($type, $credentials) = explode(' ', $authorizationHeader, 2);
-
-            if ($type === 'Basic') {
-                $decodedCredentials = base64_decode($credentials);
-                list($username, $password) = explode(':', $decodedCredentials, 2);
-
-                $adminData = $this->adminModel->getAdminDetails($username);
-
-                if ($adminData && password_verify($password, $adminData['password'])) {
-                    return [
-                        'success' => true,
-                        'message' => 'Admin login successful.',
-                        'token' => $this->generateToken($username)
-                    ];
-                } else {
-                    return ['success' => false, 'message' => 'Invalid credentials.'];
-                }
-            } else {
-                return ['success' => false, 'message' => 'Invalid authorization type.'];
-            }
+    public function login() {
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="Admin Area"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Unauthorized';
+            exit;
         } else {
-            return ['success' => false, 'message' => 'Authorization header missing.'];
-        }
-    }
+            $username = $_SERVER['PHP_AUTH_USER'];
+            $password = $_SERVER['PHP_AUTH_PW'];
+            $admin = $this->admin->authenticate($username, $password);
 
-    private function generateToken($username) {
-        return base64_encode($username . ':' . uniqid() . ':' . time());
+            if ($admin) {
+                echo json_encode(["message" => "Login successful", "admin" => $admin]);
+            } else {
+                header('HTTP/1.0 401 Unauthorized');
+                echo json_encode(["message" => "Login failed"]);
+            }
+        }
     }
 }
