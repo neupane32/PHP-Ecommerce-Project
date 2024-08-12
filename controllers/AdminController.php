@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/Admin.php';
 require_once __DIR__ . '/../config/Database.php';
-require_once __DIR__ . '/../controllers/UserController.php'; // Include the UserController
+require_once __DIR__ . '/../controllers/UserController.php';
 
 class AdminController {
     private $admin;
@@ -11,7 +11,7 @@ class AdminController {
         $database = new Database();
         $db = $database->getConnection();
         $this->admin = new Admin($db);
-        $this->userController = new UserController(); // Initialize UserController
+        $this->userController = new UserController($db); // Pass db to UserController
     }
 
     public function login() {
@@ -29,13 +29,15 @@ class AdminController {
             $admin = $this->admin->authenticate($username, $encodedPassword);
 
             if ($admin) {
-                // Start the session and store admin information
-                session_start();
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+
                 $_SESSION['admin_id'] = $admin['id'];
                 echo json_encode(["message" => "Login successful", "admin" => $admin]);
 
-                // After login success, proceed to create a user
-                $this->createUser(); // Call createUser immediately for testing
+                // Call createUser once for testing
+                $this->createUser();
             } else {
                 header('HTTP/1.0 401 Unauthorized');
                 echo json_encode(["message" => "Login failed"]);
@@ -44,13 +46,13 @@ class AdminController {
     }
 
     public function createUser() {
-        $this->authorizeAdmin(); // Ensure the current user is an admin
+        $this->authorizeAdmin();
 
-        // Example data; in a real application, you would get this from a request
-        $username = 'newuser'; // Replace with dynamic data in production
+        $username = 'newuser';
         $password = 'password123';
-        $role = 'user'; // or 'admin' if creating another admin
+        $role = 'user';
 
+        // Ensure that user creation logic executes once and correctly
         $result = $this->userController->createUser($username, $password, $role);
 
         if ($result) {
@@ -61,7 +63,9 @@ class AdminController {
     }
 
     private function authorizeAdmin() {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         if (!isset($_SESSION['admin_id'])) {
             header('HTTP/1.0 403 Forbidden');
             echo json_encode(["message" => "You do not have permission to perform this action"]);
