@@ -1,6 +1,6 @@
 <?php
 
-require_once './models/Admin.php';  // Add this line to include the Admin model
+require_once './models/Admin.php';
 require_once './controllers/Controller.php'; // If 'Controller.php' is a base class, include it
 
 class AdminController extends Controller {
