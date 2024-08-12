@@ -18,15 +18,17 @@ class AdminController {
             echo 'Unauthorized';
             exit;
         } else {
-            // Fetch username and password from the request
             $username = $_SERVER['PHP_AUTH_USER'];
             $password = $_SERVER['PHP_AUTH_PW'];
 
-            // Base64 encode the username and password
+            // Debugging: Print the encoded values
             $encodedUsername = base64_encode($username);
             $encodedPassword = base64_encode($password);
 
-            // Authenticate the user using the encoded values
+            // For debugging purposes
+            echo "Encoded Username: $encodedUsername<br>";
+            echo "Encoded Password: $encodedPassword<br>";
+
             $admin = $this->admin->authenticate($encodedUsername, $encodedPassword);
 
             if ($admin) {
