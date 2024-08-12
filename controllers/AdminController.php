@@ -25,9 +25,6 @@ class AdminController {
             $encodedUsername = base64_encode($username);
             $encodedPassword = base64_encode($password);
 
-            // For debugging purposes
-            echo "Encoded Username: $encodedUsername<br>";
-            echo "Encoded Password: $encodedPassword<br>";
 
             $admin = $this->admin->authenticate($encodedUsername, $encodedPassword);
 
