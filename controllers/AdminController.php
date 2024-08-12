@@ -22,11 +22,10 @@ class AdminController {
             $password = $_SERVER['PHP_AUTH_PW'];
 
             // Debugging: Print the encoded values
-            $encodedUsername = base64_encode($username);
             $encodedPassword = base64_encode($password);
 
 
-            $admin = $this->admin->authenticate($encodedUsername, $encodedPassword);
+            $admin = $this->admin->authenticate($username, $encodedPassword);
 
             if ($admin) {
                 echo json_encode(["message" => "Login successful", "admin" => $admin]);
