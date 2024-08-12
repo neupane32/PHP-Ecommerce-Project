@@ -7,21 +7,30 @@ class Admin {
         $this->conn = $db;
     }
 
-    public function insertAdmin($username, $password) {
-        $query = "INSERT INTO " . $this->table_name . " (username, password) VALUES (:username, :password)";
-
+    public function authenticate($username, $password) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE username = ? AND password = ?";
         $stmt = $this->conn->prepare($query);
+        
+        if (!$stmt) {
+            die("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
+        }
 
-        // Bind parameters
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
+        $stmt->bind_param("ss", $username, $password);
 
-        // Execute the query
-        if ($stmt->execute()) {
-            return true;
+        if (!$stmt->execute()) {
+            die("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+
+        if (!$result) {
+            die("Get result failed: (" . $stmt->errno . ") " . $stmt->error);
+        }
+
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
         } else {
             return false;
         }
     }
 }
-
