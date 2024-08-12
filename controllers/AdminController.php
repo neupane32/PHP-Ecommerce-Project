@@ -1,9 +1,8 @@
 <?php
+require_once __DIR__ . '/../models/Admin.php';
+require_once __DIR__ . '/../config/Database.php';
 
-require_once './models/Admin.php';
-require_once './controllers/Controller.php'; // If 'Controller.php' is a base class, include it
-
-class AdminController extends Controller {
+class AdminController {
     private $admin;
 
     public function __construct() {
@@ -11,6 +10,7 @@ class AdminController extends Controller {
         $db = $database->getConnection();
         $this->admin = new Admin($db);
     }
+
     public function login() {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             header('WWW-Authenticate: Basic realm="Admin Area"');
