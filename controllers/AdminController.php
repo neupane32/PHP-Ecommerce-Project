@@ -35,9 +35,6 @@ class AdminController {
 
                 $_SESSION['admin_id'] = $admin['id'];
                 echo json_encode(["message" => "Login successful", "admin" => $admin]);
-
-                // Call createUser once for testing
-                $this->createUser();
             } else {
                 header('HTTP/1.0 401 Unauthorized');
                 echo json_encode(["message" => "Login failed"]);
@@ -48,17 +45,24 @@ class AdminController {
     public function createUser() {
         $this->authorizeAdmin();
 
-        $username = 'newuser';
-        $password = 'password123';
-        $role = 'user';
+        // Get POST data
+        $data = json_decode(file_get_contents("php://input"), true);
 
-        // Ensure that user creation logic executes once and correctly
-        $result = $this->userController->createUser($username, $password, $role);
+        if (isset($data['username']) && isset($data['password']) && isset($data['role'])) {
+            $username = $data['username'];
+            $password = $data['password'];
+            $role = $data['role'];
 
-        if ($result) {
-            echo json_encode(["message" => "User created successfully"]);
+            $result = $this->userController->createUser($username, $password, $role);
+
+            if ($result) {
+                echo json_encode(["message" => "User created successfully"]);
+            } else {
+                echo json_encode(["message" => "User creation failed"]);
+            }
         } else {
-            echo json_encode(["message" => "User creation failed"]);
+            header('HTTP/1.0 400 Bad Request');
+            echo json_encode(["message" => "Invalid input"]);
         }
     }
 
