@@ -1,53 +1,38 @@
 <?php
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../config/Database.php';
 
 class UserController {
-    private $user;
+    private $db;
 
-    public function __construct() {
-        $database = new Database();
-        $db = $database->getConnection();
-        $this->user = new User($db);
+    public function __construct($db) {
+        $this->db = $db;
     }
 
-    public function createUser($username, $password, $role = 'user') {
-        if ($this->user->create($username, $password, $role)) {
-            echo json_encode(["message" => "User created successfully"]);
-        } else {
-            echo json_encode(["message" => "User creation failed"]);
-        }
-    }
+    public function createUser($username, $password, $role) {
+        try {
+            // Check if the user already exists
+            $query = "SELECT id FROM users WHERE username = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $stmt->store_result();
 
-    public function loginUser() {
-        if (!isset($_SERVER['PHP_AUTH_USER'])) {
-            header('WWW-Authenticate: Basic realm="User Area"');
-            header('HTTP/1.0 401 Unauthorized');
-            echo 'Unauthorized';
-            exit;
-        } else {
-            $username = $_SERVER['PHP_AUTH_USER'];
-            $password = $_SERVER['PHP_AUTH_PW'];
-
-            $user = $this->user->authenticate($username, $password);
-
-            if ($user) {
-                echo json_encode(["message" => "Login successful", "user" => $user]);
-            } else {
-                header('HTTP/1.0 401 Unauthorized');
-                echo json_encode(["message" => "Login failed"]);
+            if ($stmt->num_rows > 0) {
+                return false; // User already exists
             }
-        }
-    }
 
-    public function authorize($userId, $requiredRole) {
-        $userRole = $this->user->getUserRole($userId);
+            // Proceed to create a new user
+            $query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+            $stmt = $this->db->prepare($query);
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $stmt->bind_param("sss", $username, $hashedPassword, $role);
 
-        if ($userRole === $requiredRole) {
-            return true;
-        } else {
-            header('HTTP/1.0 403 Forbidden');
-            echo json_encode(["message" => "You do not have permission to perform this action"]);
+            if ($stmt->execute()) {
+                return true; // User created successfully
+            } else {
+                return false; // Failed to create user
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
             return false;
         }
     }
