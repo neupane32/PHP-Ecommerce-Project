@@ -13,7 +13,7 @@ class AdminController {
         $this->adminModel->password = $password;
 
         if ($this->adminModel->checkCredentials()) {
-            return "Correct details: Now you can create user!!";
+            return "Correct password";
         } else {
             return "Incorrect password";
         }
