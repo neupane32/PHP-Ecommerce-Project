@@ -31,25 +31,5 @@ if ($requestMethod === 'POST') {
 } else {
     echo json_encode(["message" => "Invalid request method"]);
 }
-/*
-User can login
-POST
-URL:http://localhost/project_php/api/users.php
-
-Body: 
-{
-    "username":"prinsajoshi4",
-    "password":"prinsajoshi4"
-}
-
-Response:
-{
-    "message": {
-        "message": "Correct password",
-        "token": "8ef88b54156fb5742b8148a45881719b"
-    }
-}
-
-*/
 
 ?>
