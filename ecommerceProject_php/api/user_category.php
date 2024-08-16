@@ -40,46 +40,4 @@ if ($user) {
     echo json_encode(["message" => "Invalid or missing token"]);
 }
 
-/*
-User can see product data by category
-Make sure:
-to keep authorization along with value as user's token whose catgory u wannaa see
-
-*GET
-URL:http://localhost/project_php/api/user_category.php
-
-Body:
-{
-    "category":"Electronics"
-}
-
-Response:
-[
-    {
-        "product_id": 10,
-        "product_name": "Gaming mouse5",
-        "description": "Mechanical gaming keyboard with customizable RGB backlighting mouse.",
-        "category": "Electronics",
-        "price": "59.99",
-        "user_id": 8
-    },
-    {
-        "product_id": 11,
-        "product_name": "Gaming mouse6",
-        "description": "Mechanical gaming keyboard with customizable RGB backlighting mouse.",
-        "category": "Electronics",
-        "price": "59.99",
-        "user_id": 8
-    },
-    {
-        "product_id": 12,
-        "product_name": "Gaming mouse7",
-        "description": "Mechanical gaming keyboard with customizable RGB backlighting mouse.",
-        "category": "Electronics",
-        "price": "59.99",
-        "user_id": 8
-    }
-]
-
-*/
 ?>
