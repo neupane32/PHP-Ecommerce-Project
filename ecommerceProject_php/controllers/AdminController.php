@@ -1,7 +1,7 @@
 <?php
-require_once '../models/Admin.php';
-require_once '../models/User.php';
-require_once '../models/Product.php'; // Assuming you have a Product model
+require_once './models/Admin.php';
+require_once './models/User.php';
+require_once './models/Product.php';
 
 class AdminController {
     private $adminModel;
