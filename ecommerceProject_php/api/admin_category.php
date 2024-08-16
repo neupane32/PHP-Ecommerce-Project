@@ -40,48 +40,4 @@ switch ($requestMethod) {
         ]);
         break;
 }
-
-
-/*
-Make sure:
--In headers keep key as authorization and value as admin's token
-
-GET(get all the list of categories as per mentioned categories by admin)
-URL: http://localhost/project_php/api/admin_category.php
-
-Body:
-{
-    "category": "Furniture"
-}
-
-Response:
-[
-    {
-        "product_id": 4,
-        "product_name": "Gaming mouse",
-        "description": "Mechanical gaming keyboard with customizable RGB backlighting mouse.",
-        "category": "Furniture",
-        "price": "59.99",
-        "user_id": 7
-    },
-    {
-        "product_id": 5,
-        "product_name": "Gaming mouse skkjsjkdskj",
-        "description": "Mechanical gaming keyboard with customizable RGB backlighting mouse.",
-        "category": "Furniture",
-        "price": "59.99",
-        "user_id": 7
-    }
-]
-
-DELETE(deletes all the category of the electroncs of admin)
-URL: http://localhost/project_php/api/admin_category.php
-
-Body:
-{
-    "category": "Electronics"
-}
-
-*/
-
 ?>
