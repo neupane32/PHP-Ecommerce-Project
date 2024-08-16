@@ -1,5 +1,5 @@
 <?php
-require_once '../project_php/config/database.php';
+require_once './config/database.php';
 
 class Admin {
     private $db;
