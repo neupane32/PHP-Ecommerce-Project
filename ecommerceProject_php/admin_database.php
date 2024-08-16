@@ -32,5 +32,5 @@ $database = new Database();
 $admin = new Admin($database->getConnection());
 
 // Insert new admin with username "admin", password "admin", role "admin", and blank token
-$admin->insertAdmin("admin", "admin", "admin");
+$admin->insertAdmin("admin", "adminAashish", "admin");
 ?>
