@@ -1,9 +1,10 @@
 <?php
 class Database{
     private $host="localhost";
-    private $db_name="database2";
     private $username="root";
     private $password="";
+    private $db_name="project";
+
     public $conn;
 
     public function getConnection(){
