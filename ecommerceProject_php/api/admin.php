@@ -18,23 +18,4 @@ if (isset($data->username) && isset($data->password)) {
         'message' => 'Username and password required'
     ]);
 }
-
-/*
-
-To check if the admin is true and generate the admin's token for futher actions
-URL:http://localhost/project_php/api/admin.php
-
-Body:
-{
-    "username":"admin",
-    "password":"admin"
-}
-
-Response:
-{
-    "message": "Correct password",
-    "token": "c2f06195059a41da503b01c5ab7d0038"
-}
-
-*/
 ?>
