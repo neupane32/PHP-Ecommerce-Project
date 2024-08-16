@@ -44,43 +44,6 @@ switch ($requestMethod) {
         ]);
         break;
 }
-
-/*
-Make sure:
--To keep authorization along with value as admin token. To verify ur admin
-
-Admin can create and delete the user
-*create the user
-POST
-URL:http://localhost/project_php/api/create_user.php
-
-Body:
-{
-    "username":"prinsajoshi4",
-    "password":"prinsajoshi4"    
-}
-
-Response:
-{
-    "message": "User created successfully"
-}
-
-*delete the user
-DELETE
-URL: http://localhost/project_php/api/create_user.php
-
-Body:
-{
-    "user_id":5
-}
-
-Response:
-{
-    "message": "User deleted successfully"
-}
-
-*/
-
 ?>
 
 
