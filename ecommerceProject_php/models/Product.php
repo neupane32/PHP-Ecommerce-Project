@@ -86,19 +86,29 @@ class Product {
             $query = "SELECT * FROM " . $this->table_name . " WHERE product_id = ?";
             $stmt = $this->conn->prepare($query);
             $stmt->bind_param("i", $productId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            // Fetch a single product as an associative array
+            $product = $result->fetch_assoc();
+            $stmt->close();
+    
+            return $product; // Return a single product
         } else {
             // Get all products
             $query = "SELECT * FROM " . $this->table_name;
             $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            // Fetch all products as an array of associative arrays
+            $products = $result->fetch_all(MYSQLI_ASSOC);
+            $stmt->close();
+    
+            return $products; // Return an array of products
         }
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $products = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-
-        return $products;
     }
+    
 
     public function getCategory($category=null) {
         if ($category) {
