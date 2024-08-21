@@ -13,25 +13,33 @@ $headers = apache_request_headers();
 $adminToken = isset($headers['Authorization']) ? $headers['Authorization'] : '';
 $data = json_decode(file_get_contents("php://input"));
 
+function handleGet($adminController, $adminToken, $data) {
+    $category = $data->category ?? null;
+    $response = $adminController->getCategory($adminToken, $category);
+    return json_encode($response);
+}
+
+function handleDelete($adminController, $adminToken, $data) {
+    if (isset($data->category)) {
+        $category = $data->category;
+        $response = $adminController->deleteCategory($adminToken, $category);
+        return json_encode([
+            "message" => $response ? "Category deleted successfully" : "Failed to delete category"
+        ]);
+    } else {
+        return json_encode([
+            'message' => 'Category not found'
+        ]);
+    }
+}
+
 switch ($requestMethod) {
     case 'GET':
-        $category = $data->category ?? null;
-        $response = $adminController->getCategory($adminToken, $category);
-        echo json_encode($response);
+        echo handleGet($adminController, $adminToken, $data);
         break;
 
     case 'DELETE':
-        if (isset($data->category)) {
-            $category = $data->category;
-            $response = $adminController->deleteCategory($adminToken, $category);
-            echo json_encode([
-                "message" => $response ? "Category deleted successfully" : "Failed to delete category"
-            ]);
-        } else {
-            echo json_encode([
-                'message' => 'Category not found'
-            ]);
-        }
+        echo handleDelete($adminController, $adminToken, $data);
         break;
 
     default:
