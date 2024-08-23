@@ -45,7 +45,7 @@ switch ($requestMethod) {
     default:
         echo json_encode([
             'message' => 'Invalid request method'
-        ]);
+        ]);           
         break;
-}
+} 
 ?>
