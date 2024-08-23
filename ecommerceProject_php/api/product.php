@@ -15,8 +15,7 @@ $userController = new UserController($db);
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-// Fetch all HTTP request headers sent by the client to the server
-// Returns an associative array where keys are header names and values are the corresponding header values
+
 $headers = apache_request_headers();
 $token = isset($headers['Authorization']) ? $headers['Authorization'] : ''; // Extract token if present otherwise null
 
@@ -24,28 +23,8 @@ $user = $userController->getUserByToken($token);
 $data = json_decode(file_get_contents("php://input"));
 
 
-// Set header
-// Key: authorization
-// Value: 057f2a000a97fa31f05942ad51a65ea8 (token)
-
 if ($user) {
     switch ($requestMethod) {
-        /*
-        URL: (get by all)
-        http://localhost/zproject1/api/product.php
-
-        Response:
-        [{"product_id":2,"product_name":"carroteeeeeee","description":"carrot is vege","price":"199.00","user_id":5},
-        {"product_id":4,"product_name":"bananaaa","description":"banana is a fruit","price":"10.00","user_id":5},
-        {"product_id":5,"product_name":"carrot","description":"carrot is a vege","price":"10.00","user_id":5},
-        {"product_id":6,"product_name":"radish","description":"radish is a vege","price":"10.00","user_id":5}]
-
-        URL: (get by id)
-        http://localhost/zproject1/api/product.php?product_id=5
-
-        Response:
-        {"product_id":5,"product_name":"carrot","description":"carrot is a vege","price":"10.00","user_id":5}
-        */
         case 'GET':
             if (isset($data->product_id)) {
                 // Convert the value received from GET request parameter named into an integer
@@ -62,21 +41,6 @@ if ($user) {
             }
             break;
 
-        /*
-        URL:
-        http://localhost/zproject1/api/product.php
-
-        Body:
-        {
-            "product_name": "radish",
-            "description": "radish is a vege",
-            "price": 10,
-            "category": "Vegetables"
-        }
-
-        Response:
-        {"message":"Product created successfully"}
-        */
         case 'POST':
             $data = json_decode(file_get_contents("php://input"), true);
             if (!empty($data['product_name']) && !empty($data['description']) && !empty($data['category']) && isset($data['price'])) {
@@ -93,25 +57,6 @@ if ($user) {
             }
             break;
 
-        /*
-        Update the product
-        URL:
-        http://localhost/zproject1/api/product.php
-
-        Body:
-        {
-            "product_id": 6,
-            "product_name": "radish",
-            "description": "radish is vege",
-            "price": 199,
-            "category": "Vegetables"
-        }
-
-        Response:
-        {
-            "message": "Product updated successfully"
-        }
-        */
         case 'PUT':
             $data = json_decode(file_get_contents("php://input"), true);
             if (!empty($data['product_id']) && !empty($data['product_name']) && !empty($data['description']) && !empty($data['category']) && isset($data['price'])) {
@@ -129,20 +74,6 @@ if ($user) {
             }
             break;
 
-        /*
-        URL:
-        http://localhost/zproject1/api/product.php
-
-        Body:
-        {
-            "product_id": 3
-        }
-
-        Response:
-        {
-            "message": "Product deleted successfully"
-        }
-        */
         case 'DELETE':
             $data = json_decode(file_get_contents("php://input"), true);
             if (!empty($data['product_id'])) {
